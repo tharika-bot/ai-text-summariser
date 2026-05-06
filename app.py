@@ -93,7 +93,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ── Paste your Gemini API key here ───────────────────────────────────────────
-GEMINI_API_KEY = "AIzaSyBP7ixRjrl7Dsp514ogjK2xlEQ1eyVLtos"
+GEMINI_API_KEY = GEMINI_API_KEY = st.secrets["AIzaSyBP7ixRjrl7Dsp514ogjK2xlEQ1eyVLtos"]
 
 # ── Utility functions ─────────────────────────────────────────────────────────
 
