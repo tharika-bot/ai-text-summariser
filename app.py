@@ -16,6 +16,7 @@ import time
 import io
 import google.generativeai as genai
 import streamlit as st
+st.write(st.secrets)
 from PyPDF2 import PdfReader
 
 # ── Page config ───────────────────────────────────────────────────────────────
@@ -114,7 +115,7 @@ def extract_pdf_text(uploaded_file) -> str:
 
 def call_gemini(prompt: str) -> str:
     """Call Gemini API and return response text."""
-    api_key = st.secrets.get("AIzaSyA-NYsbtfHA0RiJpZnMXUVtg1vAdrUG8Io", "")
+    api_key = st.secrets.get("GEMINI_API_KEY", "")
     if not api_key:
         raise ValueError("GEMINI_API_KEY not found in secrets.")
     genai.configure(api_key=api_key)
