@@ -111,13 +111,11 @@ def extract_pdf_text(uploaded_file) -> str:
     for page in reader.pages:
         text += page.extract_text() + "\n"
     return text.strip()
-
+# FIXED:
 def call_gemini(prompt: str) -> str:
-    """Call Gemini API and return response text."""
-    api_key = st.secrets.get("GEMINI_API_KEY", "")
+    api_key = GEMINI_API_KEY  # use the hardcoded variable at top
     if not api_key:
-        raise ValueError("GEMINI_API_KEY not found in secrets.")
-    genai.configure(api_key=api_key)
+        raise ValueError("API key is empty.")
     model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt)
     return response.text.strip()
