@@ -111,11 +111,19 @@ def extract_pdf_text(uploaded_file) -> str:
     for page in reader.pages:
         text += page.extract_text() + "\n"
     return text.strip()
-# FIXED:
+
 def call_gemini(prompt: str) -> str:
-    api_key = GEMINI_API_KEY  # use the hardcoded variable at top
+    """Call Gemini API and return response text."""
+    # Try secrets first, then session state (from sidebar input)
+    try:
+        api_key = st.secrets.get("GEMINI_API_KEY", "")
+    except Exception:
+        api_key = ""
     if not api_key:
-        raise ValueError("API key is empty.")
+        api_key = st.session_state.get("manual_api_key", "")
+    if not api_key:
+        raise ValueError("Please enter your Gemini API key in the sidebar.")
+    genai.configure(api_key=api_key)
     model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt)
     return response.text.strip()
@@ -173,6 +181,25 @@ def main():
     with st.sidebar:
         st.header("Settings")
 
+        # API key input (used if secrets not configured)
+        try:
+            has_secret = bool(st.secrets.get("GEMINI_API_KEY", ""))
+        except Exception:
+            has_secret = False
+
+        if not has_secret:
+            manual_key = st.text_input(
+                "Gemini API Key",
+                type="password",
+                placeholder="AIzaSy...",
+                help="Enter your Gemini API key from aistudio.google.com"
+            )
+            st.session_state["manual_api_key"] = manual_key
+        else:
+            st.success("API Key loaded")
+
+        st.divider()
+
         mode = st.selectbox(
             "Summarisation Mode",
             list(PROMPTS.keys()),
@@ -199,7 +226,7 @@ def main():
     st.subheader("Input")
 
     # Tabs for text input vs PDF upload
-    tab1, tab2 = st.tabs(["Type / Paste Text", " Upload PDF"])
+    tab1, tab2 = st.tabs(["Type / Paste Text", "Upload PDF"])
 
     input_text = ""
 
@@ -283,7 +310,7 @@ def main():
         # Download
         st.markdown("<br>", unsafe_allow_html=True)
         st.download_button(
-            label="Download summary as .txt",
+            label="⬇️ Download summary as .txt",
             data=summary,
             file_name="summary.txt",
             mime="text/plain",
@@ -316,7 +343,7 @@ def main():
         # ════════════════════════════════════
         if do_compare:
             st.divider()
-            st.subheader("Compare All Modes")
+            st.subheader("⚖️ Compare All Modes")
             st.caption("Generating summaries in all 4 modes — this may take a few seconds...")
 
             results = {}
