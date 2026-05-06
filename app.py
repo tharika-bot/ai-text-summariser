@@ -16,7 +16,6 @@ import time
 import io
 import google.generativeai as genai
 import streamlit as st
-st.write(st.secrets)
 from PyPDF2 import PdfReader
 
 # ── Page config ───────────────────────────────────────────────────────────────
