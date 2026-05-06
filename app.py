@@ -21,7 +21,7 @@ from PyPDF2 import PdfReader
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="AI Text Summariser",
-    page_icon="",
+    page_icon="📝",
     layout="wide",
 )
 
@@ -165,13 +165,13 @@ reasoning, knowledge representation, planning, learning, and perception."""
 # ── Main App ──────────────────────────────────────────────────────────────────
 
 def main():
-    st.title(" AI Text Summariser")
+    st.title("📝 AI Text Summariser")
     st.markdown("Summarise any text instantly using **AI**. Supports text input, PDF upload, keyword extraction, and mode comparison.")
     st.divider()
 
     # ── Sidebar ──
     with st.sidebar:
-        st.header(" Settings")
+        st.header("⚙️ Settings")
 
         mode = st.selectbox(
             "Summarisation Mode",
@@ -185,21 +185,21 @@ def main():
 
         st.divider()
         st.markdown("**Mode descriptions:**")
-        st.markdown("1. **Concise** — short & dense")
-        st.markdown("2. **Bullet Points** — key ideas as list")
-        st.markdown("3. **Simple** —  easy read")
-        st.markdown("4. **Technical** — keeps terminology")
+        st.markdown("🔹 **Concise** — short & dense")
+        st.markdown("🔹 **Bullet Points** — key ideas as list")
+        st.markdown("🔹 **Simple** — no jargon, easy read")
+        st.markdown("🔹 **Technical** — keeps terminology")
 
         st.divider()
         st.markdown("**Extra Features:**")
-        do_keywords = st.checkbox(" Extract Keywords", value=True)
-        do_compare  = st.checkbox(" Compare All Modes", value=False)
+        do_keywords = st.checkbox("🔑 Extract Keywords", value=True)
+        do_compare  = st.checkbox("⚖️ Compare All Modes", value=False)
 
     # ── Input Section ──
-    st.subheader(" Input")
+    st.subheader("📥 Input")
 
     # Tabs for text input vs PDF upload
-    tab1, tab2 = st.tabs([" Type / Paste Text", " Upload PDF"])
+    tab1, tab2 = st.tabs(["✏️ Type / Paste Text", "📄 Upload PDF"])
 
     input_text = ""
 
@@ -227,7 +227,7 @@ def main():
             with st.spinner("Extracting text from PDF..."):
                 try:
                     input_text = extract_pdf_text(uploaded_file)
-                    st.success(f" PDF text extracted! ({count_words(input_text)} words found)")
+                    st.success(f"✅ PDF text extracted! ({count_words(input_text)} words found)")
                     with st.expander("Preview extracted text"):
                         st.text(input_text[:1000] + ("..." if len(input_text) > 1000 else ""))
                 except Exception as e:
@@ -238,7 +238,7 @@ def main():
     st.caption(f"Word count: **{word_count}**")
 
     # ── Summarise Button ──
-    clicked = st.button(" Summarise", type="primary", use_container_width=True)
+    clicked = st.button("✨ Summarise", type="primary", use_container_width=True)
 
     if clicked:
         if word_count < 20:
@@ -250,7 +250,7 @@ def main():
         # ════════════════════════════════════
         # FEATURE 1 — Normal Summary
         # ════════════════════════════════════
-        st.subheader(" Summary")
+        st.subheader("📋 Summary")
 
         with st.spinner("Generating summary..."):
             try:
@@ -283,7 +283,7 @@ def main():
         # Download
         st.markdown("<br>", unsafe_allow_html=True)
         st.download_button(
-            label=" Download summary as .txt",
+            label="⬇️ Download summary as .txt",
             data=summary,
             file_name="summary.txt",
             mime="text/plain",
@@ -294,7 +294,7 @@ def main():
         # ════════════════════════════════════
         if do_keywords:
             st.divider()
-            st.subheader(" Keywords Extracted")
+            st.subheader("🔑 Keywords Extracted")
 
             with st.spinner("Extracting keywords..."):
                 try:
@@ -316,7 +316,7 @@ def main():
         # ════════════════════════════════════
         if do_compare:
             st.divider()
-            st.subheader(" Compare All Modes")
+            st.subheader("⚖️ Compare All Modes")
             st.caption("Generating summaries in all 4 modes — this may take a few seconds...")
 
             results = {}
